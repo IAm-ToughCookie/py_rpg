@@ -161,7 +161,7 @@ while running:
         running = False
     else:
         enemy_choice = 1
-        target = random.randrange(0, 3) # TODO: Target doesn't work
+        target = random.randrange(0, 3)
         enemy_dmg = enemy.generate_damage()
         players[target].take_damage(enemy_dmg)
-        print(str(enemy.name) + " attacks", players.name, "for", enemy_dmg, "points of damage.")
+        print(enemy.name + " attacks", players[target].name, "for", enemy_dmg, "points of damage.")
