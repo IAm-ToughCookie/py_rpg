@@ -1,5 +1,5 @@
 import random
-from classes.game import bcolors
+from classes.game import bcolors, gui
 
 
 class Person:
@@ -116,11 +116,25 @@ class Person:
         else:
             current_mp = mp_string
 
-        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar) + " " * 13 + "_" *len(mp_bar))
-        print(bcolors.BOLD + str(self.name) + current_hp + " |" + bcolors.OKGREEN + hp_bar +
-              bcolors.ENDC + bcolors.BOLD + "|   " + current_mp + " |" + bcolors.OKBLUE + mp_bar +
+        n_string = str(self.name) + ":"
+        current_n = ""
+
+        if len(n_string) < 9:
+            n_decreased = 9 - len(n_string)
+
+            while n_decreased > 0:
+                current_n += " "
+                n_decreased -= 1
+
+            current_n = n_string + current_n
+        else:
+            current_n = n_string
+
+        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar) + " " * 15 + "_" * len(mp_bar))
+        print(bcolors.BOLD + current_n + current_hp + " |" + bcolors.OKGREEN + hp_bar +
+              bcolors.ENDC + bcolors.BOLD + "|     " + current_mp + " |" + bcolors.OKBLUE + mp_bar +
               bcolors.ENDC + bcolors.BOLD + "|")
-        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar) + " " * 13 + "¯" * len(mp_bar))
+        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar) + " " * 15 + "¯" * len(mp_bar))
 
     def get_enemy_stats(self):
         hp_bar = ""
@@ -147,7 +161,21 @@ class Person:
         else:
             current_hp = hp_string
 
+        n_string = str(self.name) + ":"
+        current_n = ""
+
+        if len(n_string) < 9:
+            n_decreased = 9 - len(n_string)
+
+            while n_decreased > 0:
+                current_n += " "
+                n_decreased -= 1
+
+            current_n = n_string + current_n
+        else:
+            current_n = n_string
+
         print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar))
-        print(bcolors.BOLD + str(self.name) + current_hp + " |" + bcolors.FAIL + hp_bar +
+        print(bcolors.BOLD + current_n + current_hp + " |" + bcolors.FAIL + hp_bar +
               bcolors.ENDC + bcolors.BOLD + "|")
         print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar))

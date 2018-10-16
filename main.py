@@ -14,7 +14,6 @@ import random
 # TODO Refactor main.py so it's just runs the game
 # TODO Add title screen with "Play", "Help" and "Quit" options
 # TODO import sys and os for clearing screen
-# TODO fix bug with names
 
 # Spell library
 # Damage
@@ -49,27 +48,26 @@ player_name = "Dan"
 party_name = ["Healer", "Druid"]
 
 # Player & Enemies
-player1 = Person("Dan:     ", 1460, 165, 60, 34, player_spells, player_items)
-player2 = Person("Priest:  ", 1250, 499, 15, 34, player_spells, player_items)
-player3 = Person("Druid:   ", 1600, 250, 60, 85, player_spells, player_items)
+player1 = Person("Dan", 1460, 150, 60, 34, player_spells, player_items)
+player2 = Person("Priest", 900, 399, 15, 34, player_spells, player_items)
+player3 = Person("Druid", 1600, 250, 60, 85, player_spells, player_items)
 
 players = [player1, player2, player3]
 
-enemy = Person("Goblin:  ", 1200, 65, 45, 25, [], [])
+enemy = Person("Goblin", 1200, 65, 45, 25, [], [])
 
 enemies = [enemy]
 
 running = True
 
-print(bcolors.FAIL + bcolors.BOLD + "AN ENEMY ATTACKS!" + bcolors.ENDC)
+print(bcolors.FAIL + bcolors.BOLD + " " * 20 + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 
 while running:
-    print(gui.separatorA)
-
-    print("\n")
-    print(bcolors.BOLD + "NAME                  HP                                 MP")
+    print(gui.separatorA + "========")
+    print(bcolors.BOLD + "NAME     HP                                        MP")
     for player in players:
         player.get_stats()
+    print("ENEMIES:", gui.separatorA)
     for enemy in enemies:
         enemy.get_enemy_stats()
 
@@ -88,7 +86,8 @@ while running:
                 print("\nYou have attacked for", dmg, "and killed", enemy.name, "!")
                 break
             else:
-                print("\nYou attacked for", dmg, "points of damage.")
+                print("\nYou attacked", enemy.name, "for", dmg, "damage!")
+                enemy.get_enemy_stats()
 
         elif index == 1:
             player.choose_magic()
@@ -110,14 +109,18 @@ while running:
 
             if spell.type == "white":
                 player.heal(magic_dmg)
-                print(bcolors.OKBLUE + "\n" + spell.name + " heals for", str(magic_dmg), "HP." + bcolors.ENDC)
+                print(bcolors.OKBLUE + "\n" + spell.name + " heals " + player.name + " for", magic_dmg, "HP."
+                      + bcolors.ENDC)
             elif spell.type == "black":
                 enemy.take_damage(magic_dmg)
                 if enemy.hp is 0:
-                    print(bcolors.OKBLUE + "You deal", magic_dmg, "damage with", spell.name, "and killed", enemy.name, "!" + bcolors.ENDC)
+                    print(bcolors.OKBLUE + "Your", str.lower(spell.name), "deals", magic_dmg, "damage and killed", enemy.name,
+                          "!" + bcolors.ENDC)
                     break
                 else:
-                    print(bcolors.OKBLUE + "You deal", magic_dmg, "damage with", spell.name + bcolors.ENDC)
+                    print(bcolors.OKBLUE + "Your", str.lower(spell.name), "deals", magic_dmg, "damage to", enemy.name
+                          + bcolors.ENDC)
+                    enemy.get_enemy_stats()
 
         elif index == 2:
             player.choose_items()
@@ -133,25 +136,33 @@ while running:
 
             if item.type == "potion":
                 player.heal(item.prop)
-                print(bcolors.OKGREEN + "\n" + item.name + " heals for", str(item.prop) + "HP" + bcolors.ENDC)
+                print(bcolors.OKGREEN + "\n" + item.name + " heals" + player.name + " for", str(item.prop) + "HP!"
+                      + bcolors.ENDC)
+
             elif item.type == "elixir":
                 if item.name == "Mega Elixir":
                     for i in players:
                         i.hp = i.maxhp
                         i.mp = i.maxmp
-                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + " HP and MP of your party" + bcolors.ENDC)
+                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored HP and MP of your party!"
+                          + bcolors.ENDC)
                 else:
                     player.hp = player.maxhp
                     player.mp = player.maxmp
-                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + bcolors.ENDC)
+                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + " to" + player.name
+                          + bcolors.ENDC)
+
             elif item.type == "attack":
                 item_dmg = item.generate_damage()
                 enemy.take_damage(item_dmg)
                 if enemy.hp is 0:
-                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage and kills", enemy.name + "!" + bcolors.ENDC)
+                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage and kills", enemy.name + "!"
+                          + bcolors.ENDC)
                     break
                 else:
-                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage" + bcolors.ENDC)
+                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage" + " to", enemy.name + "!"
+                          + bcolors.ENDC)
+                    enemy.get_enemy_stats()
 
     if enemy.get_hp() == 0:
         print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
@@ -164,4 +175,4 @@ while running:
         target = random.randrange(0, 3)
         enemy_dmg = enemy.generate_damage()
         players[target].take_damage(enemy_dmg)
-        print(enemy.name + " attacks", players[target].name, "for", enemy_dmg, "points of damage.")
+        print(enemy.name + " attacks", players[target].name, "for", enemy_dmg, "damage.")
