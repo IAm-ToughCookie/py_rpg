@@ -2,12 +2,24 @@ from classes.characters import Person
 from classes.game import bcolors, gui
 from classes.magic import Spell
 from classes.inventory import Item
+import random
 
+
+# TODO Add AI to NPCs
+# TODO Add Shop where you can buy/sell items. Shop has it's own inventory that gets expanded with stuff you sell
+# TODO Move spells into own file
+# TODO Add character classes with different attributes
+# TODO Add Spellbook (own file)
+# TODO Add class trainers where you can learn new spells depending on your class
+# TODO Refactor main.py so it's just runs the game
+# TODO Add title screen with "Play", "Help" and "Quit" options
+# TODO import sys and os for clearing screen
+# TODO fix bug with names
 
 # Spell library
 # Damage
 fire = Spell("Fire", 10, 100, "Fire", "black")
-thunder = Spell("thunder", 12, 124, "Lightning", "black")
+thunder = Spell("Thunder", 12, 124, "Lightning", "black")
 blizzard = Spell("Blizzard", 10, 100, "Frost", "black")
 meteor = Spell("Meteor", 10, 100, "Fire", "black")
 quake = Spell("Quake", 14, 140, "Earth", "black")
@@ -37,13 +49,15 @@ player_name = "Dan"
 party_name = ["Healer", "Druid"]
 
 # Player & Enemies
-player1 = Person("Dan:     ", 460, 65, 60, 34, player_spells, player_items)
-player2 = Person("Priest:  ", 250, 99, 15, 34, player_spells, player_items)
-player3 = Person("Druid:   ", 600, 50, 60, 85, player_spells, player_items)
+player1 = Person("Dan:     ", 1460, 165, 60, 34, player_spells, player_items)
+player2 = Person("Priest:  ", 1250, 499, 15, 34, player_spells, player_items)
+player3 = Person("Druid:   ", 1600, 250, 60, 85, player_spells, player_items)
 
 players = [player1, player2, player3]
 
-enemy = Person("Goblin", 1200, 65, 45, 25, [], [])
+enemy = Person("Goblin:  ", 1200, 65, 45, 25, [], [])
+
+enemies = [enemy]
 
 running = True
 
@@ -52,12 +66,13 @@ print(bcolors.FAIL + bcolors.BOLD + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 while running:
     print(gui.separatorA)
 
-    print("\n\n")
+    print("\n")
     print(bcolors.BOLD + "NAME                  HP                                 MP")
     for player in players:
         player.get_stats()
+    for enemy in enemies:
+        enemy.get_enemy_stats()
 
-    print("\n")
 
     for player in players:
         player.choose_action()
@@ -69,7 +84,11 @@ while running:
         if index == 0:
             dmg = player.generate_damage()
             enemy.take_damage(dmg)
-            print("\nYou attacked for", dmg, "points of damage.")
+            if enemy.hp is 0:
+                print("\nYou have attacked for", dmg, "and killed", enemy.name, "!")
+                break
+            else:
+                print("\nYou attacked for", dmg, "points of damage.")
 
         elif index == 1:
             player.choose_magic()
@@ -94,7 +113,11 @@ while running:
                 print(bcolors.OKBLUE + "\n" + spell.name + " heals for", str(magic_dmg), "HP." + bcolors.ENDC)
             elif spell.type == "black":
                 enemy.take_damage(magic_dmg)
-                print(bcolors.OKBLUE + "You deal", magic_dmg, "damage with", spell.name + bcolors.ENDC)
+                if enemy.hp is 0:
+                    print(bcolors.OKBLUE + "You deal", magic_dmg, "damage with", spell.name, "and killed", enemy.name, "!" + bcolors.ENDC)
+                    break
+                else:
+                    print(bcolors.OKBLUE + "You deal", magic_dmg, "damage with", spell.name + bcolors.ENDC)
 
         elif index == 2:
             player.choose_items()
@@ -112,13 +135,23 @@ while running:
                 player.heal(item.prop)
                 print(bcolors.OKGREEN + "\n" + item.name + " heals for", str(item.prop) + "HP" + bcolors.ENDC)
             elif item.type == "elixir":
-                player.hp = player.maxhp
-                player.mp = player.maxmp
-                print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + bcolors.ENDC)
+                if item.name == "Mega Elixir":
+                    for i in players:
+                        i.hp = i.maxhp
+                        i.mp = i.maxmp
+                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + " HP and MP of your party" + bcolors.ENDC)
+                else:
+                    player.hp = player.maxhp
+                    player.mp = player.maxmp
+                    print(bcolors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + bcolors.ENDC)
             elif item.type == "attack":
                 item_dmg = item.generate_damage()
                 enemy.take_damage(item_dmg)
-                print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage" + bcolors.ENDC)
+                if enemy.hp is 0:
+                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage and kills", enemy.name + "!" + bcolors.ENDC)
+                    break
+                else:
+                    print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage" + bcolors.ENDC)
 
     if enemy.get_hp() == 0:
         print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
@@ -128,9 +161,7 @@ while running:
         running = False
     else:
         enemy_choice = 1
+        target = random.randrange(0, 3) # TODO: Target doesn't work
         enemy_dmg = enemy.generate_damage()
-        player1.take_damage(enemy_dmg)
-        print("Enemy attacks for", enemy_dmg, "points of damage.")
-
-        print(gui.separatorB)
-        print("Enemy HP:", bcolors.FAIL + str(enemy.get_hp()) + "/" + str(enemy.get_maxhp()) + bcolors.ENDC + "\n")
+        players[target].take_damage(enemy_dmg)
+        print(str(enemy.name) + " attacks", players.name, "for", enemy_dmg, "points of damage.")

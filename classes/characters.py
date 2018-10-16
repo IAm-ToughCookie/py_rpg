@@ -68,9 +68,86 @@ class Person:
             i += 1
 
     def get_stats(self):
-        print("                  ________________________           _____________")
-        print(bcolors.BOLD + str(self.name) +
-              str(self.hp) + "/" + str(
-            self.maxhp) + " |" + bcolors.OKGREEN + "████                " + bcolors.ENDC, bcolors.BOLD +
-              " |   " + str(self.mp) + "/" + str(
-            self.maxmp) + " |" + bcolors.OKBLUE + "███       " + bcolors.ENDC, bcolors.BOLD + "|")
+        hp_bar = ""
+        bar_ticks = (self.hp / self.maxhp) * 100 / 4
+
+        mp_bar = ""
+        mp_ticks = (self.mp / self.maxmp) * 100 / 10
+
+        while bar_ticks > 0:
+            hp_bar += "▋"
+            bar_ticks -= 1
+
+        while len(hp_bar) < 25:
+            hp_bar += " "
+
+        while mp_ticks > 0:
+            mp_bar += "▋"
+            mp_ticks -= 1
+
+        while len(mp_bar) < 10:
+            mp_bar += " "
+
+        hp_string = str(self.hp) + "/" + str(self.maxhp)
+        current_hp = ""
+
+        if len(hp_string) < 9:
+            decreased = 9 - len(hp_string)
+
+            while decreased > 0:
+                current_hp += " "
+                decreased -= 1
+
+            current_hp += hp_string
+        else:
+            current_hp = hp_string
+
+        mp_string = str(self.mp) + "/" + str(self.maxmp)
+        current_mp = ""
+
+        if len(mp_string) < 7:
+            decreased = 7 - len(mp_string)
+
+            while decreased > 0:
+                current_mp += " "
+                decreased -= 1
+
+            current_mp += mp_string
+        else:
+            current_mp = mp_string
+
+        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar) + " " * 13 + "_" *len(mp_bar))
+        print(bcolors.BOLD + str(self.name) + current_hp + " |" + bcolors.OKGREEN + hp_bar +
+              bcolors.ENDC + bcolors.BOLD + "|   " + current_mp + " |" + bcolors.OKBLUE + mp_bar +
+              bcolors.ENDC + bcolors.BOLD + "|")
+        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar) + " " * 13 + "¯" * len(mp_bar))
+
+    def get_enemy_stats(self):
+        hp_bar = ""
+        bar_ticks = (self.hp / self.maxhp) * 100 / 2
+
+        while bar_ticks > 0:
+            hp_bar += "▋"
+            bar_ticks -= 1
+
+        while len(hp_bar) < 50:
+            hp_bar += " "
+
+        hp_string = str(self.hp) + "/" + str(self.maxhp)
+        current_hp = ""
+
+        if len(hp_string) < 9:
+            decreased = 9 - len(hp_string)
+
+            while decreased > 0:
+                current_hp += " "
+                decreased -= 1
+
+            current_hp += hp_string
+        else:
+            current_hp = hp_string
+
+        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar))
+        print(bcolors.BOLD + str(self.name) + current_hp + " |" + bcolors.FAIL + hp_bar +
+              bcolors.ENDC + bcolors.BOLD + "|")
+        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar))
