@@ -1,5 +1,3 @@
-import re
-
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -10,6 +8,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-class gui:
+
+class Gui:
     separatorA = "============================================================="
     separatorB = "-------------------------------------------------------------"

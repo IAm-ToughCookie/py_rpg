@@ -1,7 +1,8 @@
 from classes.characters import Person
-from classes.game import bcolors, gui
+from classes.game import bcolors, Gui
 from classes.magic import Spell
 from classes.inventory import Item
+from classes.screens import draw_titlescreen, title_choice, draw_gameover
 import random
 
 # TODO Add AI to NPCs
@@ -12,7 +13,6 @@ import random
 # TODO Add class trainers where you can learn new spells depending on your class
 # TODO Refactor main.py so it's just runs the game
 # TODO Add title screen with "Play", "Help" and "Quit" options
-# TODO import sys and os for clearing screen
 
 # Spell library
 # Damage
@@ -44,10 +44,10 @@ player_items = [{"item": potion, "qty": 15}, {"item": hipotion, "qty": 5},
                 {"item": megaelixir, "qty": 2}, {"item": bomb, "qty": 2},
                 {"item": knife, "qty": 20}]
 
-# Player & Enemies
-player1 = Person("Dan", 1460, 150, 60, 34, player_spells, player_items)
-player2 = Person("Priest", 900, 399, 15, 34, player_spells, player_items)
-player3 = Person("Druid", 1600, 250, 60, 85, player_spells, player_items)
+# Player & Enemies 1460,900,1600
+player1 = Person("Dan", 10, 150, 60, 34, player_spells, player_items)
+player2 = Person("Priest", 10, 399, 15, 34, player_spells, player_items)
+player3 = Person("Druid", 10, 250, 60, 85, player_spells, player_items)
 
 enemy1 = Person("Imp", 150, 10, 20, 5, [], [])
 enemy2 = Person("Goblin", 3000, 20, 200, 25, [], [])
@@ -56,17 +56,20 @@ enemy3 = Person("Imp", 150, 10, 20, 5, [], [])
 players = [player1, player2, player3]
 enemies = [enemy1, enemy2, enemy3]
 
-running = True
+
+draw_titlescreen()
+running = title_choice()
+
 
 print(bcolors.FAIL + bcolors.BOLD + " " * 20 + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 
 while running:
     print("\033[H\033[J")
-    print(gui.separatorA + "========")
+    print(Gui.separatorA + "========")
     print(bcolors.BOLD + "NAME     HP                                        MP")
     for player in players:
         player.get_stats()
-    print("ENEMIES:", gui.separatorA)
+    print("ENEMIES:", Gui.separatorA)
     for enemy in enemies:
         enemy.get_enemy_stats()
 
@@ -171,7 +174,7 @@ while running:
         print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
         running = False
     elif not players:
-        print(bcolors.FAIL + "You died!" + bcolors.ENDC)
+        draw_gameover()
         running = False
     else:
         i = 0

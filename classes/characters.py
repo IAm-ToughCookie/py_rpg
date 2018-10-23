@@ -1,5 +1,5 @@
 import random
-from classes.game import bcolors, gui
+from classes.game import bcolors
 
 
 class Person:
