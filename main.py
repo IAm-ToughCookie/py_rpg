@@ -49,9 +49,9 @@ player1 = Person("Dan", 1460, 150, 60, 34, player_spells, player_items)
 player2 = Person("Priest", 900, 399, 15, 34, player_spells, player_items)
 player3 = Person("Druid", 1600, 250, 60, 85, player_spells, player_items)
 
-enemy1 = Person("Imp", 500, 10, 20, 5, [], [])
-enemy2 = Person("Goblin", 1200, 65, 45, 25, [], [])
-enemy3 = Person("Imp", 500, 10, 20, 5, [], [])
+enemy1 = Person("Imp", 150, 10, 20, 5, [], [])
+enemy2 = Person("Goblin", 3000, 20, 200, 25, [], [])
+enemy3 = Person("Imp", 150, 10, 20, 5, [], [])
 
 players = [player1, player2, player3]
 enemies = [enemy1, enemy2, enemy3]
@@ -61,6 +61,7 @@ running = True
 print(bcolors.FAIL + bcolors.BOLD + " " * 20 + "AN ENEMY ATTACKS!" + bcolors.ENDC)
 
 while running:
+    print("\033[H\033[J")
     print(gui.separatorA + "========")
     print(bcolors.BOLD + "NAME     HP                                        MP")
     for player in players:
@@ -71,7 +72,7 @@ while running:
 
     for player in players:
         player.choose_action()
-        choice = input("\nChoose action:    ")
+        choice = input(bcolors.BOLD + "\nChoose action:    " + bcolors.ENDC)
         index = int(choice) - 1
 
         print("You chose", choice + "\n")
@@ -83,10 +84,10 @@ while running:
 
             if enemies[enemy].hp is 0:
                 print("\nYou have attacked for", dmg, "and killed", enemies[enemy].name, "!")
-                break
+                del enemies[enemy]
             else:
                 print("\nYou attacked", enemies[enemy].name, "for", dmg, "damage!")
-                enemy.get_enemy_stats()
+                enemies[enemy].get_enemy_stats()
 
         elif index == 1:
             player.choose_magic()
@@ -117,11 +118,11 @@ while running:
                     print(bcolors.OKBLUE + "Your", str.lower(spell.name), "deals", magic_dmg, "damage and killed",
                           enemies[enemy].name,
                           "!" + bcolors.ENDC)
-                    break
+                    del enemies[enemy]
                 else:
                     print(bcolors.OKBLUE + "Your", str.lower(spell.name), "deals", magic_dmg, "damage to",
                           enemies[enemy].name + bcolors.ENDC)
-                    enemy.get_enemy_stats()
+                    enemies[enemy].get_enemy_stats()
 
         elif index == 2:
             player.choose_items()
@@ -160,21 +161,29 @@ while running:
                 if enemies[enemy].hp is 0:
                     print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage and kills",
                           enemies[enemy].name + "!" + bcolors.ENDC)
-                    break
+                    del enemies[enemy]
                 else:
                     print(bcolors.OKGREEN + "\n" + item.name + " deals", item_dmg, "damage" + " to",
                           enemies[enemy].name + "!" + bcolors.ENDC)
-                    enemy.get_enemy_stats()
+                    enemies[enemy].get_enemy_stats()
 
-    if enemy.get_hp() == 0:
+    if not enemies:
         print(bcolors.OKGREEN + "You win!" + bcolors.ENDC)
         running = False
-    elif player1.get_hp() == 0:
+    elif not players:
         print(bcolors.FAIL + "You died!" + bcolors.ENDC)
         running = False
     else:
-        enemy_choice = 1
-        target = random.randrange(0, 3)
-        enemy_dmg = enemy.generate_damage()
-        players[target].take_damage(enemy_dmg)
-        print(enemies[enemy].name + " attacks", players[target].name, "for", enemy_dmg, "damage.")
+        i = 0
+        for enemy in enemies:
+            enemy_choice = 1
+            target = random.randrange(0, len(players))
+            enemy_dmg = enemies[i].generate_damage()
+            players[target].take_damage(enemy_dmg)
+            if players[target].get_hp() == 0:
+                print(enemies[i].name, "attacks", players[target].name, "for", enemy_dmg, "damage.",
+                      players[target].name, "has died!")
+                del players[target]
+            else:
+                print(enemies[i].name,  "attacks", players[target].name, "for", enemy_dmg, "damage.")
+            i += 1
