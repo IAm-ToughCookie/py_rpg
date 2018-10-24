@@ -2,7 +2,7 @@ from classes.visual import Colors, Gui
 import random
 
 
-def battle_loop(players,enemies,player_items, running):
+def battle_loop(players, enemies, player_items, running):
     battle = running
     while battle:
         print("\033[H\033[J")
@@ -124,7 +124,7 @@ def battle_loop(players,enemies,player_items, running):
         else:
             i = 0
             for enemy in enemies:
-                enemy_choice = 1
+                # enemy_choice = 1
                 target = random.randrange(0, len(players))
                 enemy_dmg = enemies[i].generate_damage()
                 players[target].take_damage(enemy_dmg)

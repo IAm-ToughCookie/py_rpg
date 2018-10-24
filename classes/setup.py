@@ -72,6 +72,7 @@ def setup_game():
     bomb = Item("Bomb", "attack", "A throwable bomb. BIG BOOM", 500)
     knife = Item("Throwing Knife", "attack", "A small throwing knife.", 50)
 
+    global player_spells, player_items
     player_spells = [fire, thunder, blizzard, meteor, cure, cura]
     player_items = [{"item": potion, "qty": 15}, {"item": hipotion, "qty": 5},
                     {"item": superpotion, "qty": 5}, {"item": elixir, "qty": 5},
