@@ -1,5 +1,5 @@
 import random
-from classes.game import bcolors
+from classes.visual import Colors
 
 
 class Person:
@@ -47,34 +47,34 @@ class Person:
 
     def choose_action(self):
         i = 1
-        print("\n" + bcolors.BOLD + self.name + bcolors.ENDC)
-        print(bcolors.OKBLUE + bcolors.BOLD + "ACTIONS" + bcolors.ENDC)
+        print("\n" + Colors.BOLD + self.name + Colors.ENDC)
+        print(Colors.OKBLUE + Colors.BOLD + "ACTIONS" + Colors.ENDC)
         for item in self.actions:
             print("     " + str(i) + ".", item)
             i += 1
 
     def choose_magic(self):
         i = 1
-        print(bcolors.OKBLUE + bcolors.BOLD + "MAGIC" + bcolors.ENDC)
+        print(Colors.OKBLUE + Colors.BOLD + "MAGIC" + Colors.ENDC)
         for spell in self.magic:
             print("     " + str(i) + ".", spell.name, "(cost:", str(spell.cost) + ")")
             i += 1
 
     def choose_items(self):
         i = 1
-        print(bcolors.OKGREEN + bcolors.BOLD  + "ITEMS" + bcolors.ENDC)
+        print(Colors.OKGREEN + Colors.BOLD + "ITEMS" + Colors.ENDC)
         for item in self.items:
             print("     " + str(i) + ".", item["item"].name + ":", item["item"].desc, "(x" + str(item["qty"]) + ")")
             i += 1
 
     def choose_target(self, enemies):
         i = 1
-        print(bcolors.FAIL + bcolors.BOLD + "TARGET" + bcolors.ENDC)
+        print(Colors.FAIL + Colors.BOLD + "TARGET" + Colors.ENDC)
         for enemy in enemies:
             if enemy.get_hp() != 0:
                 print(str(i) + ".", enemy.name)
                 i += 1
-        choice = int(input(bcolors.BOLD + "Choose target:    " + bcolors.ENDC)) -1
+        choice = int(input(Colors.BOLD + "Choose target:    " + Colors.ENDC)) - 1
         return choice
 
     def get_stats(self):
@@ -139,11 +139,11 @@ class Person:
             current_n = n_string + current_n
         else:
             current_n = n_string
-        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar) + " " * 15 + "_" * len(mp_bar))
-        print(bcolors.BOLD + current_n + current_hp + " |" + bcolors.OKGREEN + hp_bar +
-              bcolors.ENDC + bcolors.BOLD + "|     " + current_mp + " |" + bcolors.OKBLUE + mp_bar +
-              bcolors.ENDC + bcolors.BOLD + "|")
-        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar) + " " * 15 + "¯" * len(mp_bar))
+        print(Colors.BOLD + " " * 20 + "_" * len(hp_bar) + " " * 15 + "_" * len(mp_bar))
+        print(Colors.BOLD + current_n + current_hp + " |" + Colors.OKGREEN + hp_bar +
+              Colors.ENDC + Colors.BOLD + "|     " + current_mp + " |" + Colors.OKBLUE + mp_bar +
+              Colors.ENDC + Colors.BOLD + "|")
+        print(Colors.BOLD + " " * 20 + "¯" * len(hp_bar) + " " * 15 + "¯" * len(mp_bar))
 
     def get_enemy_stats(self):
         hp_bar = ""
@@ -184,7 +184,7 @@ class Person:
         else:
             current_n = n_string
 
-        print(bcolors.BOLD + " " * 20 + "_" * len(hp_bar))
-        print(bcolors.BOLD + current_n + current_hp + " |" + bcolors.FAIL + hp_bar +
-              bcolors.ENDC + bcolors.BOLD + "|")
-        print(bcolors.BOLD + " " * 20 + "¯" * len(hp_bar))
+        print(Colors.BOLD + " " * 20 + "_" * len(hp_bar))
+        print(Colors.BOLD + current_n + current_hp + " |" + Colors.FAIL + hp_bar +
+              Colors.ENDC + Colors.BOLD + "|")
+        print(Colors.BOLD + " " * 20 + "¯" * len(hp_bar))
