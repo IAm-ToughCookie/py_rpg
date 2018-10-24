@@ -1,6 +1,6 @@
-from classes import setup
 from classes.visual import Colors, draw_titlescreen, title_choice, draw_gameover, go_choice, draw_win
 from classes.battle import battle_loop
+from classes import setup
 from classes.setup import setup_game
 
 # TODO Add AI to NPCs
