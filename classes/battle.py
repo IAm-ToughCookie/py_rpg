@@ -54,9 +54,11 @@ def battle_loop(players, enemies, player_items, running):
                 player.reduce_mp(spell.cost)
 
                 if spell.type == "white":
-                    player.heal(magic_dmg)
-                    print(Colors.OKBLUE + "\n" + spell.name + " heals " + player.name + " for", magic_dmg, "HP."
+                    target = player.choose_target(players)
+                    players[target].heal(magic_dmg)
+                    print(Colors.OKBLUE + "\n" + spell.name + " heals " + players[target].name + " for", magic_dmg, "HP."
                           + Colors.ENDC)
+                    players[target].get_stats()
                 elif spell.type == "black":
                     enemy = player.choose_target(enemies)
                     enemies[enemy].take_damage(magic_dmg)
@@ -85,9 +87,11 @@ def battle_loop(players, enemies, player_items, running):
                     del player.items[item_choice]
 
                 if item.type == "potion":
-                    player.heal(item.prop)
-                    print(Colors.OKGREEN + "\n" + item.name + " heals" + player.name + " for", str(item.prop) + "HP!"
+                    target = player.choose_target(players)
+                    players[target].heal(item.prop)
+                    print(Colors.OKGREEN + "\n" + item.name + " heals " + players[target].name + " for", str(item.prop) + "HP!"
                           + Colors.ENDC)
+                    players[target].get_stats()
 
                 elif item.type == "elixir":
                     if item.name == "Mega Elixir":
@@ -96,11 +100,13 @@ def battle_loop(players, enemies, player_items, running):
                             i.mp = i.maxmp
                         print(Colors.OKGREEN + "\n" + item.name + " fully restored HP and MP of your party!"
                               + Colors.ENDC)
+                        players[target].get_stats()
                     else:
-                        player.hp = player.maxhp
-                        player.mp = player.maxmp
-                        print(Colors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + " to" + player.name
-                              + Colors.ENDC)
+                        target = player.choose_target(players)
+                        players[target].hp = player.maxhp
+                        player.mp[target] = player.maxmp
+                        print(Colors.OKGREEN + "\n" + item.name + " fully restored" + "HP and MP" + " to" +
+                              players[target].name + Colors.ENDC)
 
                 elif item.type == "attack":
                     item_dmg = item.generate_damage()
@@ -124,7 +130,6 @@ def battle_loop(players, enemies, player_items, running):
         else:
             i = 0
             for enemy in enemies:
-                # enemy_choice = 1
                 target = random.randrange(0, len(players))
                 enemy_dmg = enemies[i].generate_damage()
                 players[target].take_damage(enemy_dmg)
